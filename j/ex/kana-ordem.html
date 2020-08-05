@@ -1,0 +1,144 @@
+<script src="tinycolor.js"></script>
+<style>
+    body {
+        font-family: Soleil, Arial, sans-serif;
+    }
+    .resposta, .opcoes, .mensagem {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: nowrap;
+        padding-bottom: 1em;
+    }
+    .resposta a, .opcoes a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+    .resposta a {
+        border: 3px dashed gray;
+        background-color: #eee;
+        color: gray;
+        font-weight: bold;
+        font-size: 1.5rem;
+        border-radius: 10%;
+        width: 1rem;
+        height: 1rem;
+        padding: 1rem;
+    }
+    .resposta a.alt {
+        border-color: goldenrod;
+        background-color: lightgoldenrodyellow;
+        color: goldenrod;
+    }
+    .opcoes a {
+        border: 2px solid #039be5;
+        color: #039be5;
+        font-weight: bolder;
+        padding: .5rem;
+        border-radius: 60%;
+        background-color: #ebf7fd;
+    }
+    .opcoes a.alt {
+        background-color: #eee;
+        color: gray;
+        border-color: gray;
+    }
+    .controles {
+        display: flex;
+        justify-content: flex-end;
+    }
+    .controles a {
+        margin-right: 2rem;
+        padding: .8rem 2rem;
+        color: white;
+        background-color: black;
+        border: 0;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .controles a:hover {
+        background-color: #333;
+    }
+    .mensagem {
+        height: 1rem;
+    }
+</style>
+<div id="container">
+    <div class="resposta"></div>
+    <div class="mensagem"></div>
+    <div class="opcoes"></div>
+    <div class="controles"><a href="javascript:void(0)" onclick="desfaz()">Desfaz</a></div>
+</div>
+<script>
+    var rainbow = ['#ffb3ba','#ffdfba','#ffffba','#baffc9','#bae1ff']; //arco-iris pastel
+    function botaoColorido(e) {
+        let f = tinycolor(rainbow.pop());
+        let t = f.monochromatic()[4].toHexString();
+        e.style.color = t;
+        e.style.borderColor = t;
+        e.style.backgroundColor = f.toHexString();
+    }
+
+    let globalTimeout;
+    const q = new URLSearchParams(decodeURIComponent(location.search).replace(/^\?/,''));
+    const parm = {
+        p: q.get('per').split(/[ 　]/),
+        r: q.get('res').split(/[ 　]/),
+        a: q.get('alt').split(/[ 　]/),
+        msgAcerto: q.get('acerto') || 'Resposta correta! 🎉🎉🎉',
+        msgErro: q.get('erro') || 'Tente novamente 😉',
+    };
+    const state = {
+        lacunas: [],
+        alterna: parm.a
+    };
+    const res = document.querySelector('.resposta');
+    const opc = document.querySelector('.opcoes');
+    const msg = document.querySelector('.mensagem');
+
+    function responde(e) {
+        if (state.lacunas.length == parm.r.length) return false;
+        state.lacunas.push(e.innerText);
+        refresh();
+        valida();
+    }
+    function desfaz() {
+        state.lacunas = [];
+        clearTimeout(globalTimeout);
+        msg.innerText = '';
+        rainbow = ['#ffb3ba','#ffdfba','#ffffba','#baffc9','#bae1ff']; //arco-iris pastel
+        refresh();
+    }
+    function valida() {
+        if (state.lacunas.length != parm.r.length) return false;
+        if (state.lacunas.join() === parm.r.join()) {
+            msg.innerText = parm.msgAcerto;
+            document.querySelectorAll('.resposta a.alt').forEach((e,i) => {
+                botaoColorido(e);
+            });
+        }
+        if (state.lacunas.join() !== parm.r.join()) {
+            msg.innerText = parm.msgErro;
+            globalTimeout = setTimeout(() => {
+                msg.innerText = '';
+                desfaz();
+            },3000);
+        }
+    }
+    function refresh () {
+        let p = [...state.lacunas, ...parm.p.slice(state.lacunas.length)];
+        res.innerHTML = opc.innerHTML = '';
+        p.forEach(i => {
+            let c = (state.lacunas.find(v => v==i)) ? 'alt' : '';
+            res.innerHTML += `<a class="${c}" href="javascript:void(0)">${i}</a>`; 
+        });
+        state.alterna.forEach(i => {
+            let c = (state.lacunas.find(v => v==i)) ? 'alt' : '';
+            opc.innerHTML += `<a class="${c}" href="javascript:void(0)" onclick="responde(this)">${i}</a>`; 
+        });
+    }
+    refresh();
+</script>
