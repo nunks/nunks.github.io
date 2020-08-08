@@ -231,12 +231,15 @@
 
 
     function corrigeAltura () {
-        window.parent.document.querySelectorAll('iframe').forEach(f => {
-            if (f.contentWindow == window) {
-		console.log('achei o frame!');
-                f.style.height = f.contentWindow.document.body.scrollHeight+'px';
-            }
-        });
+        if (location.hostname == window.parent.window.location.hostname) {
+            console.log('same origin ok');
+            window.parent.document.querySelectorAll('iframe').forEach(f => {
+                if (f.contentWindow == window) {
+                    console.log('achei a mim mesmo no documento principal!');
+                    f.style.height = f.contentWindow.document.body.scrollHeight+'px';
+                }
+            });
+        }
     }
     window.addEventListener('load', corrigeAltura);
     window.addEventListener('resize', corrigeAltura);
