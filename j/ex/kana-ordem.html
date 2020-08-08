@@ -233,6 +233,7 @@
     function corrigeAltura () {
         window.parent.document.querySelectorAll('iframe').forEach(f => {
             if (f.contentWindow == window) {
+		console.log('achei o frame!');
                 f.style.height = f.contentWindow.document.body.scrollHeight+'px';
             }
         });
