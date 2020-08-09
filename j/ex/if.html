@@ -10,11 +10,13 @@
         onload="javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));"
         onload="javascript:setInterval(() => console.log('lol'),1000);"
     -->
-    <p>Conteudo anterior ao iframe</p>
-    <iframe 
-        src="kana-ordem.html?p=a i u e o&r=あ　い　う　え　お&a=い　う　え　あ　お" 
-        style="height:300px; width:100%;border:0;overflow:hidden;"
-    ></iframe>
-    <p>Conteudo posterior ao iframe</p>
+    <div id="container" style="width: 50vw;">
+        <p>Conteudo anterior ao iframe</p>
+        <iframe 
+            src="kana-ordem.html?p=a i u e o&r=あ　い　う　え　お&a=い　う　え　あ　お" 
+            style="height:300px; width:100%;border:0;overflow:hidden;"
+        ></iframe>
+        <p>Conteudo posterior ao iframe</p>
+    </div>
 </body>
 </html>
