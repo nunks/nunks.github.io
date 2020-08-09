@@ -45,7 +45,7 @@
         justify-content: space-around;
         align-items: center;
         flex-wrap: nowrap;
-        margin: 1rem;
+        margin: 10px;
     }
     
     @media only screen and (orientation: portrait) {
@@ -71,7 +71,7 @@
         border-radius: 10%;
         width: var(--w);
         height: var(--w);
-        padding: 1rem;
+        padding: 15px;
     }
     .resposta a.alt {
         border-color: goldenrod;
@@ -82,7 +82,7 @@
         border: 2px solid #039be5;
         color: #039be5;
         font-weight: bolder;
-        padding: .5rem;
+        padding: 5px;
         border-radius: 40%;
         background-color: #ebf7fd;
     }
@@ -102,10 +102,10 @@
         border-radius: 5px;
         text-decoration: none;
         font-weight: bold;
-        margin: .5rem;
+        margin: 5px;
         text-align: center;
         flex: 1;
-        font-size: 80%;
+        font-size: calc(var(--w) - 5px);
     }
     #botao-reset {
         color: white;
@@ -128,10 +128,10 @@
             border-color: black;
         }
     .avaliacao {
-        margin: .5rem;
+        margin: 5px;
         text-align: center;
-        height: var(--w);
     }
+    .avaliacao:after { content: '\00a0'; }
 </style>
 <div id="exercicio" ondragstart="return false;" ondrop="return false;">
     <div class="resposta"></div>
@@ -168,7 +168,8 @@
         p: q.get('p').split(/[ 　]/), //pergunta
         r: q.get('r').split(/[ 　]/), //resposta correta
         a: q.get('a').split(/[ 　]/), //alternativas
-        enunciado:  q.get('e') || '',   //enunciado
+        u: q.get('u') || 'unknown',   //usuario
+        enunciado:  q.get('e') || '', //enunciado
         msgAcerto:  q.get('k') || 'Resposta correta! 🎉🎉🎉', //mensagem de acerto
         msgErro:    q.get('e') || 'Tente novamente 😉',       //mensagem de erro
         msgDesisto: q.get('d') || 'Força aí! 💪',             //mensagem de desistencia
@@ -228,19 +229,4 @@
         });
     }
     refresh();
-
-
-    function corrigeAltura () {
-        if (location.hostname == window.parent.window.location.hostname) {
-            console.log('same origin ok');
-            window.parent.document.querySelectorAll('iframe').forEach(f => {
-                if (f.contentWindow == window) {
-                    console.log('achei a mim mesmo no documento principal!');
-                    f.style.height = f.contentWindow.document.body.scrollHeight+'px';
-                }
-            });
-        }
-    }
-    window.addEventListener('load', corrigeAltura);
-    window.addEventListener('resize', corrigeAltura);
 </script>
